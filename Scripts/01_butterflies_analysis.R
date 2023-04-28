@@ -31,3 +31,22 @@ str(butterfly) # check structure of dataframe
 butterfly <- clean_names(butterfly) # snake case all col names
 
 colnames(butterfly) # check the new variable names
+
+butterfly %>% 
+  duplicated() %>% #check for duplicate rows in the data
+  sum() 
+
+butterfly %>% 
+  is.na() %>% #check for missing values
+  sum()
+
+# fix sex names
+butterfly$sex <- str_replace(butterfly$sex, "Maes", "Males")
+butterfly$sex <- str_replace(butterfly$sex, "Female", "Females")
+butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
+
+# check data distribution
+butterfly %>%
+  ggplot(aes(x=forewing_length,
+             y=jun_mean))+
+  geom_jitter(aes(colour=sex))
