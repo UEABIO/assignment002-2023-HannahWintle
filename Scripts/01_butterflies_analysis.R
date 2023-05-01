@@ -47,6 +47,38 @@ butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 
 # check data distribution
 butterfly %>%
-  ggplot(aes(x=forewing_length,
-             y=jun_mean))+
+  ggplot(aes(x=jun_mean,
+             y=forewing_length))+
   geom_jitter(aes(colour=sex))
+
+#__________________________----
+
+# 📊PLOT ----
+
+# scatterplot wingspan against temperature
+
+butterfly %>%
+  ggplot(aes(x=jun_mean,
+             y=forewing_length))+
+  geom_jitter(aes(color=jun_mean))+
+  geom_smooth(method="lm", se=FALSE)+
+  facet_wrap(~sex)+
+  labs(x = "Average Temperature in June (°C)", y = "Forewing Length")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(legend.position="bottom")
+
+# boxplot and violin plot sex against forewing length
+
+butterfly %>%
+  ggplot(aes(x=sex,
+             y=forewing_length,
+             fill = sex,
+             colour = sex))+
+  geom_violin(alpha = 0.2)+
+  geom_boxplot(width = 0.2,
+               alpha = 0.6)+
+  scale_fill_manual(values = c("orange1", "mediumorchid1", "mediumaquamarine"))+
+  scale_colour_manual(values = c("orange1", "mediumorchid1", "mediumaquamarine"))+
+  theme_classic()+
+  theme(legend.position = "none")
