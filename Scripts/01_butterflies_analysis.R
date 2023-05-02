@@ -45,10 +45,18 @@ butterfly$sex <- str_replace(butterfly$sex, "Maes", "Males")
 butterfly$sex <- str_replace(butterfly$sex, "Female", "Females")
 butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 
+#fix rain value
+butterfly$rain_jun <- replace(butterfly$rain_jun, 19, "57.7")
+
 # check data distribution
 butterfly %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
+  geom_jitter(aes(colour=sex))
+
+butterfly %>%
+  ggplot(aes(x=rain_jun,
+             y=forewi))+
   geom_jitter(aes(colour=sex))
 
 #__________________________----
@@ -61,11 +69,12 @@ butterfly %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
   geom_jitter(aes(color=jun_mean))+
-  geom_smooth(method="lm", se=FALSE)+
+  geom_smooth(method="lm", se=FALSE, colour = "#140b34")+
   facet_wrap(~sex)+
-  labs(x = "Average Temperature in June (°C)", y = "Forewing Length")+
+  labs(x = "Average Temperature in June (°C)", y = "Forewing Length", colour = "Temperature (°C)")+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_color_viridis_c(option = "inferno") +
   theme(legend.position="bottom")
 
 # boxplot and violin plot sex against forewing length
@@ -81,4 +90,5 @@ butterfly %>%
   scale_fill_manual(values = c("orange1", "mediumorchid1", "mediumaquamarine"))+
   scale_colour_manual(values = c("orange1", "mediumorchid1", "mediumaquamarine"))+
   theme_classic()+
+  labs (x = "Sex", y = "Forewing Length") +
   theme(legend.position = "none")
