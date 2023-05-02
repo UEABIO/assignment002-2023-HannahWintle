@@ -48,7 +48,7 @@ butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 #fix rain value
 butterfly$rain_jun <- replace(butterfly$rain_jun, 19, "57.7")
 
-# check data distribution
+# check data distributions
 butterfly %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
@@ -56,8 +56,14 @@ butterfly %>%
 
 butterfly %>%
   ggplot(aes(x=rain_jun,
-             y=forewi))+
+             y=forewing_length))+
   geom_jitter(aes(colour=sex))
+
+butterfly %>%
+  ggplot(aes(x=year,
+             y=jun_mean))+
+  geom_jitter(aes(colour=sex))+
+  geom_smooth(method="lm", se=FALSE, colour = "black")
 
 #__________________________----
 
