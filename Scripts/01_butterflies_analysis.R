@@ -45,8 +45,11 @@ butterfly$sex <- str_replace(butterfly$sex, "Maes", "Males")
 butterfly$sex <- str_replace(butterfly$sex, "Female", "Females")
 butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 
-#fix rain value
+# fix rain value
 butterfly$rain_jun <- replace(butterfly$rain_jun, 19, "57.7")
+
+# convert year into date values
+butterfly$year <- as.Date(as.character(butterfly$year), format = "%Y")
 
 # check data distributions
 butterfly %>%
@@ -98,3 +101,24 @@ butterfly %>%
   theme_classic()+
   labs (x = "Sex", y = "Forewing Length") +
   theme(legend.position = "none")
+
+# boxplot temperature over time
+
+butterfly %>%
+  ggplot(aes(x = year, 
+             y = jun_mean,
+             fill = sex,
+             colour = sex)) +
+  geom_boxplot(alpha = 0.6, 
+               width = 0.2) +
+  theme(legend.position = "none") +
+  theme_classic()
+
+# time series of temperature and rainfall over time
+
+butterfly %>%
+  ggplot(aes(year, jun_mean)) + 
+  geom_line(color = "#0072B2", size = 1) +
+  scale_y_continuous(name = "Temperature in June") + 
+  scale_x_date(date_labels = "%Y", name = "year") +
+  theme(plot.margin = margin(7, 7, 3, 1.5))
