@@ -116,9 +116,16 @@ butterfly %>%
 
 # time series of temperature and rainfall over time
 
+butterfly$rain_jun <- as.numeric(butterfly$rain_jun)
+
 butterfly %>%
-  ggplot(aes(year, jun_mean)) + 
-  geom_line(color = "#0072B2", size = 1) +
-  scale_y_continuous(name = "Temperature in June") + 
-  scale_x_date(date_labels = "%Y", name = "year") +
-  theme(plot.margin = margin(7, 7, 3, 1.5))
+  ggplot(aes(x = year)) + 
+  geom_line(aes(y=jun_mean, color = "Temperature in June")) +
+  geom_line(aes(y=rain_jun, color = "Rainfall in June (mL)"))+
+  scale_y_continuous(name = "Temperature in June",
+                     limits = c(11.8, 16.4),
+                     sec.axis = sec_axis(~.*1, name="Rainfall in June (mL)")) +
+  scale_x_date(date_labels = "%Y", name = "Year") +
+  theme_classic()+
+  theme(aspect.ratio = 2 / (1 + sqrt(6)))+
+  scale_color_manual(values = c("orange2", "gray30"))
