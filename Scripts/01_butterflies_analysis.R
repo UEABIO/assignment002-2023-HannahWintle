@@ -9,6 +9,7 @@
 library(tidyverse) # tidy data packages
 library(janitor) # clean data names
 library (lubridate) # make sure dates are processed properly
+library(ggpubr) # regression line to scatter plot
 
 #__________________________----
 
@@ -47,6 +48,7 @@ butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 
 # fix rain value
 butterfly$rain_jun <- replace(butterfly$rain_jun, 19, "57.7")
+butterfly$rain_jun <- as.numeric(butterfly$rain_jun)
 
 # convert year into date values
 butterfly$year <- as.Date(as.character(butterfly$year), format = "%Y")
@@ -64,9 +66,15 @@ butterfly %>%
 
 butterfly %>%
   ggplot(aes(x=year,
+             y=rain_jun))+
+  geom_jitter()+
+  geom_smooth(method="lm")
+
+butterfly %>%
+  ggplot(aes(x=year,
              y=jun_mean))+
   geom_jitter(aes(colour=sex))+
-  geom_smooth(method="lm", se=FALSE, colour = "black")
+  geom_smooth(method="lm")
 
 #__________________________----
 
@@ -77,14 +85,12 @@ butterfly %>%
 butterfly %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
-  geom_jitter(aes(color=jun_mean))+
-  geom_smooth(method="lm", se=FALSE, colour = "#140b34")+
+  geom_jitter(size=2, alpha=0.6, shape=21,fill="steelblue")+
+  geom_smooth(method="lm", colour = "black")+
   facet_wrap(~sex)+
-  labs(x = "Average Temperature in June (°C)", y = "Forewing Length", colour = "Temperature (°C)")+
+  labs(x = "Average Temperature in June (°C)", y = "Forewing Length")+
   theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
-  scale_color_viridis_c(option = "inferno") +
-  theme(legend.position="bottom")
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # boxplot and violin plot sex against forewing length
 
@@ -96,36 +102,22 @@ butterfly %>%
   geom_violin(alpha = 0.2)+
   geom_boxplot(width = 0.2,
                alpha = 0.6)+
-  scale_fill_manual(values = c("orange1", "mediumorchid1", "mediumaquamarine"))+
-  scale_colour_manual(values = c("orange1", "mediumorchid1", "mediumaquamarine"))+
+  scale_fill_manual(values = c("hotpink2", "skyblue2"))+
+  scale_colour_manual(values = c("hotpink2", "skyblue2"))+
   theme_classic()+
   labs (x = "Sex", y = "Forewing Length") +
   theme(legend.position = "none")
 
-# boxplot temperature over time
+# scatter plot to show temperature change
 
 butterfly %>%
-  ggplot(aes(x = year, 
-             y = jun_mean,
-             fill = sex,
-             colour = sex)) +
-  geom_boxplot(alpha = 0.6, 
-               width = 0.2) +
-  theme(legend.position = "none") +
-  theme_classic()
-
-# time series of temperature and rainfall over time
-
-butterfly$rain_jun <- as.numeric(butterfly$rain_jun)
-
-butterfly %>%
-  ggplot(aes(x = year)) + 
-  geom_line(aes(y=jun_mean, color = "Temperature in June")) +
-  geom_line(aes(y=rain_jun, color = "Rainfall in June (mL)"))+
-  scale_y_continuous(name = "Temperature in June",
-                     limits = c(11.8, 16.4),
-                     sec.axis = sec_axis(~.*1, name="Rainfall in June (mL)")) +
-  scale_x_date(date_labels = "%Y", name = "Year") +
+  ggplot(aes(x=year,
+             y=jun_mean))+
+  geom_point(aes(colour=jun_mean))+
+  geom_smooth(method="lm", colour = "#140b34")+
+  scale_color_viridis_c(option = "inferno")+
   theme_classic()+
-  theme(aspect.ratio = 2 / (1 + sqrt(6)))+
-  scale_color_manual(values = c("orange2", "gray30"))
+  theme(legend.position = "bottom")+
+  stat_regline_equation(label.y = 17)+
+  stat_cor(aes(label=..rr.label..), label.y=16.6)+
+  labs (x = "Year", y = "Average Temperature in June (°C)", colour = "Temperature (°C)")
