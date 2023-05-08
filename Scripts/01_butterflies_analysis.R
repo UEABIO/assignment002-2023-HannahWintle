@@ -108,7 +108,7 @@ butterfly %>%
   labs (x = "Sex", y = "Forewing Length") +
   theme(legend.position = "none")
 
-# scatter plot to show temperature change
+# scatter plot to show changes in temperature over time
 
 butterfly %>%
   ggplot(aes(x=year,
