@@ -1,0 +1,53 @@
+---
+title: "Univoltine Butterflies report (WORK IN PROGRESS)"
+author: "Hannah Wintle"
+date: "2023-05-09"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library, include=FALSE}
+# PACKAGES ----
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(janitor)
+library(readr)
+library(here)
+library(colorBlindness)
+library(RColorBrewer)
+library(knitr)
+library(kableExtra)
+```
+
+## Introduction
+
+## Analysis
+
+## Results and Discussion
+
+### Male vs Female butterflies
+
+```{r Male vs Female plot, echo=FALSE, include=TRUE, out.width="100%", fig.align='middle'}
+knitr::include_graphics(here("Figures", "butterfly_sex_forewing_plot.png"))
+
+```
+
+### The effect of temperature on forewing length
+
+```{r temperature on forewing plot, echo=FALSE, include=TRUE, out.width="100%", fig.align='middle'}
+knitr::include_graphics(here("Figures", "butterfly_temp_forewing.png"))
+
+```
+
+### Climate change
+
+```{r climate change plot, echo=FALSE, include=TRUE, out.width="100%", fig.align='middle'}
+knitr::include_graphics(here("Figures", "butterfly_year_temp.png"))
+
+```
+
+## Conclusion
