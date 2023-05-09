@@ -80,7 +80,7 @@ butterfly %>%
 
 # 📊PLOT ----
 
-# scatterplot wingspan against temperature
+# scatterplot forewing length against temperature
 
 butterfly %>%
   ggplot(aes(x=jun_mean,
@@ -88,7 +88,7 @@ butterfly %>%
   geom_jitter(size=2, alpha=0.6, shape=21,fill="steelblue")+
   geom_smooth(method="lm", colour = "black")+
   facet_wrap(~sex)+
-  labs(x = "Average Temperature in June (°C)", y = "Forewing Length")+
+  labs(x = "Average Temperature in June (°C)", y = "Forewing Length (mm)")+
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
@@ -105,7 +105,7 @@ butterfly %>%
   scale_fill_manual(values = c("hotpink2", "skyblue2"))+
   scale_colour_manual(values = c("hotpink2", "skyblue2"))+
   theme_classic()+
-  labs (x = "Sex", y = "Forewing Length") +
+  labs (x = "Sex", y = "Forewing Length (mm)") +
   theme(legend.position = "none")
 
 # scatter plot to show changes in temperature over time
