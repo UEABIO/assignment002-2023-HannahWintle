@@ -1,7 +1,7 @@
 #___________________________----
 # SET UP ----
 
-# An analysis of the forewing size and temperature in Hesperia comma.
+# An analysis of sex and forewing length in Hesperia comma.
 
 #__________________________----
 
@@ -55,14 +55,18 @@ butterfly %>%
 
 # 📊PLOT ----
 
-# scatterplot forewing length against temperature
+# boxplot and violin plot sex against forewing length
 
 butterfly %>%
-  ggplot(aes(x=jun_mean,
-             y=forewing_length))+
-  geom_jitter(size=2, alpha=0.6, shape=21,fill="steelblue")+
-  geom_smooth(method="lm", colour = "black")+
-  facet_wrap(~sex)+
-  labs(x = "Average Temperature in June (°C)", y = "Forewing Length (mm)")+
-  theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+  ggplot(aes(x=sex,
+             y=forewing_length,
+             fill = sex,
+             colour = sex))+
+  geom_violin(alpha = 0.2)+
+  geom_boxplot(width = 0.2,
+               alpha = 0.6)+
+  scale_fill_manual(values = c("hotpink2", "skyblue2"))+
+  scale_colour_manual(values = c("hotpink2", "skyblue2"))+
+  theme_classic()+
+  labs (x = "Sex", y = "Forewing Length (mm)") +
+  theme(legend.position = "none")
