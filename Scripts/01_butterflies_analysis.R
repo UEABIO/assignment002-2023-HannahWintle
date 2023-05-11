@@ -65,7 +65,9 @@ butterfly %>%
   facet_wrap(~sex)+
   labs(x = "Average Temperature in June (°C)", y = "Forewing Length (mm)")+
   theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(axis.text = element_text(size = 14))+
+  theme(axis.title = element_text(size = 14))
 
 #__________________________----
 

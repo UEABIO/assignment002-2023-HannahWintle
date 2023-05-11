@@ -79,7 +79,9 @@ new_butterfly%>%
                        high = "darkred")+
   theme_light()+
   theme(legend.position = "bottom")+
-  labs (x = "Year", y = "Forewing Length (mm)", colour = "Temperature (°C)")
+  labs (x = "Year", y = "Forewing Length (mm)", colour = "Temperature (°C)")+
+  theme(axis.text = element_text(size = 14))+
+  theme(axis.title = element_text(size = 14))
 
 #__________________________----
 

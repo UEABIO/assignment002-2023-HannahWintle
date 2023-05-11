@@ -88,7 +88,9 @@ butterfly %>%
   theme(legend.position = "bottom")+
   stat_regline_equation(label.y = 17)+
   stat_cor(aes(label=..rr.label..), label.y=16.6)+
-  labs (x = "Year", y = "Average Temperature in June (°C)", colour = "Temperature (°C)")
+  labs (x = "Year", y = "Average Temperature in June (°C)", colour = "Temperature (°C)")+
+  theme(axis.text = element_text(size = 14))+
+  theme(axis.title = element_text(size = 14))
 
 #__________________________----
 
