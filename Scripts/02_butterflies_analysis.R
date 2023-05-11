@@ -9,6 +9,10 @@
 library(tidyverse) # tidy data packages
 library(janitor) # clean data names
 library (lubridate) # make sure dates are processed properly
+install.packages("png") # install png package
+library("png") # load png package
+install.packages("grid") # Install grid package
+library("grid") # Load grid
 
 #__________________________----
 
@@ -57,6 +61,9 @@ butterfly %>%
 
 # boxplot and violin plot sex against forewing length
 
+male_image <- readPNG("Images/male_butterfly.png", native=TRUE)
+female_image <- readPNG("Images/female_butterfly_01.png", native=TRUE)
+
 butterfly %>%
   ggplot(aes(x=sex,
              y=forewing_length,
@@ -69,7 +76,11 @@ butterfly %>%
   scale_colour_manual(values = c("hotpink2", "skyblue3"))+
   theme_classic()+
   labs (x = "Sex", y = "Forewing Length (mm)") +
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  annotation_custom(rasterGrob(male_image), xmin = 1.55, xmax = 2.45, ymin = 14, ymax = 14.7)+
+  annotation_custom(rasterGrob(female_image), xmin = 0.55, xmax = 1.45, ymin = 12.4, ymax = 13.3)+
+  theme(axis.text = element_text(size = 14))+
+  theme(axis.title = element_text(size = 14))
 
 #__________________________----
 
