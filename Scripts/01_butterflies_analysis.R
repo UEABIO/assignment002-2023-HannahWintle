@@ -64,5 +64,5 @@ butterfly %>%
   geom_smooth(method="lm", colour = "black")+
   facet_wrap(~sex)+
   labs(x = "Average Temperature in June (°C)", y = "Forewing Length (mm)")+
-  theme_bw()+
+  theme_light()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())

@@ -83,7 +83,7 @@ butterfly %>%
   geom_point(aes(colour=jun_mean))+
   geom_smooth(method="lm", colour = "#140b34")+
   scale_color_viridis_c(option = "inferno")+
-  theme_classic()+
+  theme_light()+
   theme(legend.position = "bottom")+
   stat_regline_equation(label.y = 17)+
   stat_cor(aes(label=..rr.label..), label.y=16.6)+

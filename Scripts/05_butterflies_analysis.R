@@ -64,17 +64,6 @@ butterfly%>%
 # 📊PLOT ----
 
 # scatter plot to show changes in forewing length over time
-
-butterfly %>%
-  ggplot(aes(x=year,
-             y=forewing_length))+
-  geom_point(aes(colour=jun_mean))+
-  geom_smooth(method="lm", colour = "#140b34")+
-  scale_color_viridis_c(option = "inferno")+
-  theme_light()+
-  theme(legend.position = "bottom")+
-  labs (x = "Year", y = "Forewing Length (mm)", colour = "Temperature (°C)")
-
 # just Males
 
 new_butterfly <- select(.data = butterfly, sex, year, forewing_length, jun_mean)
