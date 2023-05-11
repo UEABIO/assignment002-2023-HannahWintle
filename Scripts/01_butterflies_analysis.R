@@ -64,5 +64,15 @@ butterfly %>%
   geom_smooth(method="lm", colour = "black")+
   facet_wrap(~sex)+
   labs(x = "Average Temperature in June (°C)", y = "Forewing Length (mm)")+
-  theme_light()+
+  theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+#__________________________----
+
+# OUTPUT FIGURE TO FILE ----
+
+ggsave("Figures/butterfly_plot_01.png", height = 8,
+       width = 10, dpi=300)
+
+#colour blindness checker
+colorBlindness::cvdPlot()

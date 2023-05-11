@@ -65,8 +65,18 @@ butterfly %>%
   geom_violin(alpha = 0.2)+
   geom_boxplot(width = 0.2,
                alpha = 0.6)+
-  scale_fill_manual(values = c("hotpink2", "skyblue2"))+
-  scale_colour_manual(values = c("hotpink2", "skyblue2"))+
+  scale_fill_manual(values = c("hotpink2", "skyblue3"))+
+  scale_colour_manual(values = c("hotpink2", "skyblue3"))+
   theme_classic()+
   labs (x = "Sex", y = "Forewing Length (mm)") +
   theme(legend.position = "none")
+
+#__________________________----
+
+# OUTPUT FIGURE TO FILE ----
+
+ggsave("Figures/butterfly_plot_02.png", height = 8,
+       width = 10, dpi=300)
+
+#colour blindness checker
+colorBlindness::cvdPlot()

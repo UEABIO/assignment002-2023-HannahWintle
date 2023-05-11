@@ -75,7 +75,18 @@ new_butterfly%>%
              y=forewing_length))+
   geom_point(aes(colour=jun_mean))+
   geom_smooth(method="lm", colour = "#140b34")+
-  scale_color_viridis_c(option = "inferno")+
+  scale_color_gradient(low = "gold",
+                       high = "darkred")+
   theme_light()+
   theme(legend.position = "bottom")+
   labs (x = "Year", y = "Forewing Length (mm)", colour = "Temperature (°C)")
+
+#__________________________----
+
+# OUTPUT FIGURE TO FILE ----
+
+ggsave("Figures/butterfly_plot_05.png", height = 8,
+       width = 10, dpi=300)
+
+#colour blindness checker
+colorBlindness::cvdPlot()

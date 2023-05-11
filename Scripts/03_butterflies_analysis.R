@@ -82,9 +82,20 @@ butterfly %>%
              y=jun_mean))+
   geom_point(aes(colour=jun_mean))+
   geom_smooth(method="lm", colour = "#140b34")+
-  scale_color_viridis_c(option = "inferno")+
+  scale_color_gradient(low = "gold",
+                       high = "darkred")+
   theme_light()+
   theme(legend.position = "bottom")+
   stat_regline_equation(label.y = 17)+
   stat_cor(aes(label=..rr.label..), label.y=16.6)+
   labs (x = "Year", y = "Average Temperature in June (°C)", colour = "Temperature (°C)")
+
+#__________________________----
+
+# OUTPUT FIGURE TO FILE ----
+
+ggsave("Figures/butterfly_plot_03.png", height = 8,
+       width = 10, dpi=300)
+
+#colour blindness checker
+colorBlindness::cvdPlot()
