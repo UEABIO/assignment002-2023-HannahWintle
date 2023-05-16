@@ -96,7 +96,8 @@ butterfly_long %>%
   annotation_custom(rasterGrob(male_image), xmin = 1.55, xmax = 2.45, ymin = 14, ymax = 14.7)+
   annotation_custom(rasterGrob(female_image), xmin = 0.55, xmax = 1.45, ymin = 12.4, ymax = 13.2)+
   theme(axis.text = element_text(size = 14))+
-  theme(axis.title = element_text(size = 14))
+  theme(axis.title = element_text(size = 14))+
+  ylim(12,15)
 
 #__________________________----
 
