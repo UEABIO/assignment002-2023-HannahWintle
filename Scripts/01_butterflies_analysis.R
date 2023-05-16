@@ -12,6 +12,9 @@ library (lubridate) # make sure dates are processed properly
 library(here)
 library(kableExtra) # make tables
 library(broom.helpers)
+library(GGally)
+library(emmeans)
+library(performance)
 
 #__________________________----
 
@@ -96,7 +99,7 @@ colorBlindness::cvdPlot()
 
 #__________________________----
 
-# MODEL ----
+# STATISTICS ----
 
 butterfly_long %>%
   group_by(sex) %>%
@@ -134,3 +137,20 @@ difference_summary <- butterfly_new_wide %>%
             n=n())
 
 difference_summary
+
+#standard error of the difference
+difference_summary %>% 
+  mutate(se= sd/sqrt(n))
+
+#confidence intervals
+lowerCI <- 1.23-(2*0.111)
+
+upperCI <- 1.23+(2*0.111)
+
+lowerCI
+upperCI
+
+#_________________________----
+
+#MODEL----
+
