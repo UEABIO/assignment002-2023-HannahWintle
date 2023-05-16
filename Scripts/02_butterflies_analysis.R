@@ -49,8 +49,24 @@ butterfly$sex <- str_replace(butterfly$sex, "Maes", "Males")
 butterfly$sex <- str_replace(butterfly$sex, "Female", "Females")
 butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 
+# pivot data to wide format
+butterfly_wide <- butterfly %>% 
+  pivot_wider(names_from = sex, values_from = forewing_length)
+
+butterfly_wide %>% 
+  is.na() %>% #check for missing values
+  sum()
+
+butterfly_wide <- na.omit(butterfly_wide) #remove rows with na
+
+#pivot data back to long format
+butterfly_long <- butterfly_wide %>%
+  pivot_longer(cols = Females:Males, 
+               names_to = "sex",
+               values_to = "forewing_length")
+
 # check data distributions
-butterfly %>%
+butterfly_long %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
   geom_jitter(aes(colour=sex))
@@ -64,7 +80,7 @@ butterfly %>%
 male_image <- readPNG("Images/male_butterfly.png", native=TRUE)
 female_image <- readPNG("Images/female_butterfly_01.png", native=TRUE)
 
-butterfly %>%
+butterfly_long %>%
   ggplot(aes(x=sex,
              y=forewing_length,
              fill = sex,

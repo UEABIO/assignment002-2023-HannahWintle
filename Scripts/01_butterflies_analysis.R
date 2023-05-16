@@ -9,6 +9,9 @@
 library(tidyverse) # tidy data packages
 library(janitor) # clean data names
 library (lubridate) # make sure dates are processed properly
+library(here)
+library(kableExtra) # make tables
+library(broom.helpers)
 
 #__________________________----
 
@@ -36,17 +39,29 @@ butterfly %>%
   duplicated() %>% #check for duplicate rows in the data
   sum() 
 
-butterfly %>% 
-  is.na() %>% #check for missing values
-  sum()
-
 # fix sex names
 butterfly$sex <- str_replace(butterfly$sex, "Maes", "Males")
 butterfly$sex <- str_replace(butterfly$sex, "Female", "Females")
 butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
 
+# pivot data to wide format
+butterfly_wide <- butterfly %>% 
+  pivot_wider(names_from = sex, values_from = forewing_length)
+
+butterfly_wide %>% 
+  is.na() %>% #check for missing values
+  sum()
+
+butterfly_wide <- na.omit(butterfly_wide) #remove rows with na
+
+#pivot data back to long format
+butterfly_long <- butterfly_wide %>%
+  pivot_longer(cols = Females:Males, 
+               names_to = "sex",
+               values_to = "forewing_length")
+
 # check data distributions
-butterfly %>%
+butterfly_long %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
   geom_jitter(aes(colour=sex))
@@ -57,7 +72,7 @@ butterfly %>%
 
 # scatterplot forewing length against temperature
 
-butterfly %>%
+butterfly_long %>%
   ggplot(aes(x=jun_mean,
              y=forewing_length))+
   geom_jitter(size=2, alpha=0.6, shape=21,fill="steelblue")+
@@ -78,3 +93,44 @@ ggsave("Figures/butterfly_plot_01.png", height = 8,
 
 #colour blindness checker
 colorBlindness::cvdPlot()
+
+#__________________________----
+
+# MODEL ----
+
+butterfly_long %>%
+  group_by(sex) %>%
+  summarise(mean=mean(forewing_length),
+            sd=sd(forewing_length))
+
+# new object
+butterfly_summary <- butterfly_long %>%
+  group_by(sex) %>%
+  summarise(mean=mean(forewing_length),
+            sd=sd(forewing_length))
+
+# make summary plot
+butterfly_summary %>%
+  ggplot(aes(x=sex,
+             y=mean))+
+  geom_pointrange(aes(ymin=mean-sd, ymax=mean+sd)) +
+  theme_bw()
+
+# make table
+
+butterfly_summary %>% 
+  kbl(caption="Summary statistics of forewing sizes of butterflies in male and female Silver Spotter Skippers") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
+
+# calculate the average difference and sd in forewing length between sexes
+
+butterfly_new_wide <- butterfly_long %>% 
+  pivot_wider(names_from = sex, values_from = forewing_length) %>% 
+  mutate(difference = Females - Males)
+
+difference_summary <- butterfly_new_wide %>% 
+  summarise(mean=mean(difference),
+            sd=sd(difference),
+            n=n())
+
+difference_summary
