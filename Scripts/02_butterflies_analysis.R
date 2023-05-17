@@ -13,6 +13,13 @@ install.packages("png") # install png package
 library("png") # load png package
 install.packages("grid") # Install grid package
 library("grid") # Load grid
+library(here)
+library(kableExtra) # make tables
+library(broom.helpers)
+library(GGally)
+library(emmeans)
+library(performance)
+library(patchwork)
 
 #__________________________----
 
