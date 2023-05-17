@@ -51,6 +51,9 @@ knitr::include_graphics(here("Figures", "butterfly_plot_01.png"))
 
 ```
 
+### The effect of rainfall on forewing length
+I found no evidence for an interaction effect of rainfall on forewing length (F=...)
+
 ### Climate change
 
 ```{r include = F}

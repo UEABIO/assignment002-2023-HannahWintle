@@ -101,7 +101,9 @@ colorBlindness::cvdPlot()
 #_________________________----
 
 #HYPOTHESES
-# 
+# The average temperature in june affects forewing length
+# The amount of rainfall affects forewing length
+# Changes in temperature will affect male forewing length more than female forewing length by changes in temperature
 
 #MODEL----
 
@@ -157,6 +159,7 @@ check_model(butterfly_ls2, check = "vif")
 # large standard error comparing temperature and sex
 # untrustworthy coefficients/not representative
 # multicollinearity may be biasing the regression model
+# not enough data points
 
 broom::tidy(butterfly_ls2)
 
@@ -168,4 +171,6 @@ butterfly_long %>% #linear model
   geom_segment(aes(x=1, xend=2, y=14.23222, yend=13.00187), linetype="dashed")+
   stat_summary(fun.y=mean, geom="crossbar", width=0.2)
 
-emmeans::emmeans(butterfly_ls2, specs = c("jun_mean", "sex"))
+emmeans::emmeans(butterfly_ls2, specs = c("sex")) %>%
+  kbl(caption="Summary statistics of forewing sizes of butterflies in male and female Silver Spotter Skippers") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = T, position = "left")

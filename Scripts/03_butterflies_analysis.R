@@ -101,3 +101,8 @@ ggsave("Figures/butterfly_plot_03.png", height = 8,
 
 #colour blindness checker
 colorBlindness::cvdPlot()
+
+#_________________________----
+
+#HYPOTHESIS
+#The average temperature in june is increasing over time
