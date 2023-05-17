@@ -101,7 +101,7 @@ colorBlindness::cvdPlot()
 #_________________________----
 
 #HYPOTHESES
-# The average temperature in june affects forewing length
+# The average temperature in june will affect forewing length
 # The amount of rainfall affects forewing length
 # Changes in temperature will affect male forewing length more than female forewing length by changes in temperature
 
@@ -119,20 +119,6 @@ check_model(butterfly_ls1, check = "homogeneity")
 check_model(butterfly_ls1, check = "outliers")
 check_model(butterfly_ls1, check = "vif") 
 check_model(butterfly_ls1, check = "qq")
-
-MASS::boxcox(butterfly_ls1)
-
-butterfly_ls1log <- lm(log(forewing_length) ~ sex + jun_mean + rain_jun +
-                      sex:jun_mean +
-                      sex:rain_jun +
-                      jun_mean:rain_jun, 
-                    data=butterfly_long)
-
-check_model(butterfly_ls1log, check = "homogeneity")
-check_model(butterfly_ls1log, check = "vif")
-
-summary(butterfly_ls1)
-summary(butterfly_ls1log)
 
 # there is high collinearity
 # remove one of the variables 
