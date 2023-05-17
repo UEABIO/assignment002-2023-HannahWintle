@@ -15,6 +15,7 @@ library(broom.helpers)
 library(GGally)
 library(emmeans)
 library(performance)
+library(patchwork)
 
 #__________________________----
 
@@ -154,3 +155,14 @@ upperCI
 
 #MODEL----
 
+butterfly_ls1 <- lm(forewing_length ~ sex + jun_mean + rain_jun +
+                      sex:jun_mean +
+                      sex:rain_jun +
+                      jun_mean:rain_jun, 
+                    data=butterfly_long)
+
+check_model(butterfly_ls1, check = "linearity")
+check_model(butterfly_ls1, check = "homogeneity")
+check_model(butterfly_ls1, check = "outliers")
+check_model(butterfly_ls1, check = "vif") 
+check_model(butterfly_ls1, check = "qq") 
