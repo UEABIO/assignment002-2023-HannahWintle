@@ -10,6 +10,13 @@ library(tidyverse) # tidy data packages
 library(janitor) # clean data names
 library (lubridate) # make sure dates are processed properly
 library(ggpubr) # regression line to scatter plot
+library(here)
+library(kableExtra) # make tables
+library(broom.helpers)
+library(GGally)
+library(emmeans)
+library(performance)
+library(patchwork)
 
 #__________________________----
 
@@ -29,46 +36,40 @@ str(butterfly) # check structure of dataframe
 
 # 🧹 TIDY ----
 
-butterfly <- clean_names(butterfly) # snake case all col names
+# snake case all col names
+butterfly <- clean_names(butterfly)
 
-colnames(butterfly) # check the new variable names
+# check the new variable names
+colnames(butterfly)
 
-butterfly %>% 
-  duplicated() %>% #check for duplicate rows in the data
+#create new object
+butterfly_year <- select(.data=butterfly, year, jun_mean, rain_jun)
+
+#check for duplicate rows in the data
+butterfly_year %>% 
+  duplicated() %>%
   sum() 
+#remove duplicate rows
+# Remove duplicate rows
+butterfly_year <- distinct(butterfly_year)
 
-butterfly %>% 
-  is.na() %>% #check for missing values
+#check for missing values
+butterfly_year %>% 
+  is.na() %>%
   sum()
 
-# fix sex names
-butterfly$sex <- str_replace(butterfly$sex, "Maes", "Males")
-butterfly$sex <- str_replace(butterfly$sex, "Female", "Females")
-butterfly$sex <- str_replace(butterfly$sex, "Femaless", "Females")
-
 # fix rain value
-butterfly$rain_jun <- replace(butterfly$rain_jun, 19, "57.7")
-butterfly$rain_jun <- as.numeric(butterfly$rain_jun)
+butterfly_year$rain_jun <- replace(butterfly_year$rain_jun, 14, "57.7")
+butterfly_year$rain_jun <- as.numeric(butterfly_year$rain_jun)
 
 # convert year into date values
-butterfly$year <- as.Date(as.character(butterfly$year), format = "%Y")
+butterfly_year$year <- as.Date(as.character(butterfly_year$year), format = "%Y")
 
 # check data distributions
-butterfly %>%
-  ggplot(aes(x=rain_jun,
-             y=forewing_length))+
-  geom_jitter(aes(colour=sex))
-
-butterfly %>%
-  ggplot(aes(x=year,
-             y=rain_jun))+
-  geom_jitter()+
-  geom_smooth(method="lm")
-
-butterfly %>%
+butterfly_year %>%
   ggplot(aes(x=year,
              y=jun_mean))+
-  geom_jitter(aes(colour=sex))+
+  geom_jitter()+
   geom_smooth(method="lm")
 
 #__________________________----
@@ -77,7 +78,7 @@ butterfly %>%
 
 # scatter plot to show changes in temperature over time
 
-butterfly %>%
+butterfly_year %>%
   ggplot(aes(x=year,
              y=jun_mean))+
   geom_point(aes(colour=jun_mean))+
@@ -104,5 +105,25 @@ colorBlindness::cvdPlot()
 
 #_________________________----
 
+# MODEL----
+
 #HYPOTHESIS
 #The average temperature in june is increasing over time
+
+butterfly_ls3 <- lm(jun_mean ~ year, data = butterfly_year)
+
+check_model(butterfly_ls3, check = "linearity")
+check_model(butterfly_ls3, check = "homogeneity")
+check_model(butterfly_ls3, check = "outliers")
+check_model(butterfly_ls3, check = "vif") 
+check_model(butterfly_ls3, check = "qq") 
+
+MASS::boxcox(butterfly_ls3)
+
+butterfly_sqrt <- lm(1/sqrt(jun_mean) ~ year, data = butterfly)
+
+check_model(butterfly_sqrt, check = "linearity")
+check_model(butterfly_sqrt, check = "homogeneity")
+check_model(butterfly_sqrt, check = "outliers") 
+check_model(butterfly_sqrt, check = "vif") 
+check_model(butterfly_sqrt, check = "qq") 
