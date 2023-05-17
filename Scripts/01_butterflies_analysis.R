@@ -100,6 +100,9 @@ colorBlindness::cvdPlot()
 
 #_________________________----
 
+#HYPOTHESES
+# 
+
 #MODEL----
 
 butterfly_ls1 <- lm(forewing_length ~ sex + jun_mean + rain_jun +
@@ -141,7 +144,6 @@ drop1(butterfly_ls1, test = "F")
 # sex:rain_jun (F=0.12, DF=1,23, p value=0.66)
 # jun_mean:rain_jun (F=0.17, DF=1,23, p value=0.69)
 # found no evidence that temperature affects rain or that rain affects forewing length between sexes
-# statistically significant effect of temperature interacting with sex?
 
 butterfly_ls2 <- lm(forewing_length ~ sex + 
                       jun_mean +
@@ -152,13 +154,18 @@ check_model(butterfly_ls2, check = "vif")
 
 # produced better results even though there is still high multicollinearity
 # a large F value indicates that the variability between groups is larger compared with the variability within groups
+# large standard error comparing temperature and sex
 # untrustworthy coefficients/not representative
 # multicollinearity may be biasing the regression model
 
-butterfly_long %>% 
+broom::tidy(butterfly_ls2)
+
+butterfly_long %>% #linear model
   ggplot(aes(x=sex, 
              y=forewing_length))+
   geom_jitter(aes(fill=sex))+
   theme_classic()+
   geom_segment(aes(x=1, xend=2, y=14.23222, yend=13.00187), linetype="dashed")+
   stat_summary(fun.y=mean, geom="crossbar", width=0.2)
+
+emmeans::emmeans(butterfly_ls2, specs = c("jun_mean", "sex"))
