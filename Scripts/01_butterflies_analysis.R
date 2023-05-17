@@ -98,59 +98,6 @@ ggsave("Figures/butterfly_plot_01.png", height = 8,
 #colour blindness checker
 colorBlindness::cvdPlot()
 
-#__________________________----
-
-# STATISTICS ----
-
-butterfly_long %>%
-  group_by(sex) %>%
-  summarise(mean=mean(forewing_length),
-            sd=sd(forewing_length))
-
-# new object
-butterfly_summary <- butterfly_long %>%
-  group_by(sex) %>%
-  summarise(mean=mean(forewing_length),
-            sd=sd(forewing_length))
-
-# make summary plot
-butterfly_summary %>%
-  ggplot(aes(x=sex,
-             y=mean))+
-  geom_pointrange(aes(ymin=mean-sd, ymax=mean+sd)) +
-  theme_bw()
-
-# make table
-
-butterfly_summary %>% 
-  kbl(caption="Summary statistics of forewing sizes of butterflies in male and female Silver Spotter Skippers") %>% 
-  kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
-
-# calculate the average difference and sd in forewing length between sexes
-
-butterfly_new_wide <- butterfly_long %>% 
-  pivot_wider(names_from = sex, values_from = forewing_length) %>% 
-  mutate(difference = Females - Males)
-
-difference_summary <- butterfly_new_wide %>% 
-  summarise(mean=mean(difference),
-            sd=sd(difference),
-            n=n())
-
-difference_summary
-
-#standard error of the difference
-difference_summary %>% 
-  mutate(se= sd/sqrt(n))
-
-#confidence intervals
-lowerCI <- 1.23-(2*0.111)
-
-upperCI <- 1.23+(2*0.111)
-
-lowerCI
-upperCI
-
 #_________________________----
 
 #MODEL----
@@ -161,8 +108,57 @@ butterfly_ls1 <- lm(forewing_length ~ sex + jun_mean + rain_jun +
                       jun_mean:rain_jun, 
                     data=butterfly_long)
 
+check_model(butterfly_ls1, check = "normality")
 check_model(butterfly_ls1, check = "linearity")
 check_model(butterfly_ls1, check = "homogeneity")
 check_model(butterfly_ls1, check = "outliers")
 check_model(butterfly_ls1, check = "vif") 
-check_model(butterfly_ls1, check = "qq") 
+check_model(butterfly_ls1, check = "qq")
+
+MASS::boxcox(butterfly_ls1)
+
+butterfly_ls1log <- lm(log(forewing_length) ~ sex + jun_mean + rain_jun +
+                      sex:jun_mean +
+                      sex:rain_jun +
+                      jun_mean:rain_jun, 
+                    data=butterfly_long)
+
+check_model(butterfly_ls1log, check = "homogeneity")
+check_model(butterfly_ls1log, check = "vif")
+
+summary(butterfly_ls1)
+summary(butterfly_ls1log)
+
+# there is high collinearity
+# remove one of the variables 
+
+#drop1 can help identify the least significant predictor variable
+
+drop1(butterfly_ls1, test = "F")
+# all three interaction terms appeared under the drop1 function
+# therefore they are not statistically significant
+# sex:jun_mean (F=0.55, DF=1,23, p value=0.47)
+# sex:rain_jun (F=0.12, DF=1,23, p value=0.66)
+# jun_mean:rain_jun (F=0.17, DF=1,23, p value=0.69)
+# found no evidence that temperature affects rain or that rain affects forewing length between sexes
+# statistically significant effect of temperature interacting with sex?
+
+butterfly_ls2 <- lm(forewing_length ~ sex + 
+                      jun_mean +
+                      jun_mean:sex,
+                    data=butterfly_long)
+
+check_model(butterfly_ls2, check = "vif")
+
+# produced better results even though there is still high multicollinearity
+# a large F value indicates that the variability between groups is larger compared with the variability within groups
+# untrustworthy coefficients/not representative
+# multicollinearity may be biasing the regression model
+
+butterfly_long %>% 
+  ggplot(aes(x=sex, 
+             y=forewing_length))+
+  geom_jitter(aes(fill=sex))+
+  theme_classic()+
+  geom_segment(aes(x=1, xend=2, y=14.23222, yend=13.00187), linetype="dashed")+
+  stat_summary(fun.y=mean, geom="crossbar", width=0.2)

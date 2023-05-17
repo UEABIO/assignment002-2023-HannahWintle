@@ -108,3 +108,58 @@ ggsave("Figures/butterfly_plot_02.png", height = 8,
 
 #colour blindness checker
 colorBlindness::cvdPlot()
+
+#__________________________----
+
+# STATISTICS ----
+
+butterfly_long %>%
+  group_by(sex) %>%
+  summarise(mean=mean(forewing_length),
+            sd=sd(forewing_length))
+
+# new object
+butterfly_summary <- butterfly_long %>%
+  group_by(sex) %>%
+  summarise(mean=mean(forewing_length),
+            sd=sd(forewing_length))
+
+# make summary plot
+butterfly_summary %>%
+  ggplot(aes(x=sex,
+             y=mean))+
+  geom_pointrange(aes(ymin=mean-sd, ymax=mean+sd)) +
+  theme_bw()
+
+# make table
+
+butterfly_summary %>% 
+  kbl(caption="Summary statistics of forewing sizes of butterflies in male and female Silver Spotter Skippers") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
+
+# calculate the average difference and sd in forewing length between sexes
+
+butterfly_new_wide <- butterfly_long %>% 
+  pivot_wider(names_from = sex, values_from = forewing_length) %>% 
+  mutate(difference = Females - Males)
+
+difference_summary <- butterfly_new_wide %>% 
+  summarise(mean=mean(difference),
+            sd=sd(difference),
+            n=n())
+
+difference_summary
+
+#standard error of the difference
+difference_summary %>% 
+  mutate(se= sd/sqrt(n))
+
+#confidence intervals
+lowerCI <- 1.23-(2*0.111)
+
+upperCI <- 1.23+(2*0.111)
+
+lowerCI
+upperCI
+
+#Sizes of female butterflies were bigger than male butterflies, with a mean difference in forewing length of 1.23 [1.008, 1.452] mm (mean [95% CI]).
