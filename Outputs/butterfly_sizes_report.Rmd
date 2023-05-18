@@ -1,5 +1,5 @@
 ---
-title: "Exploring the universal ecological responses to climate change in butterflies"
+title: "Exploring the universal ecological responses to climate change in Hespbutterflies"
 author: "Hannah Wintle (100309582)"
 date: "2023-05-09"
 output: pdf_document
