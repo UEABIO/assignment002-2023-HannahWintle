@@ -170,3 +170,40 @@ lowerCI
 upperCI
 
 #Sizes of female butterflies were bigger than male butterflies, with a mean difference in forewing length of 1.23 [1.008, 1.452] mm (mean [95% CI]).
+
+#____________________----
+#MODEL----
+
+butterfly_long %>% #linear model
+  ggplot(aes(x=sex, 
+             y=forewing_length))+
+  geom_jitter(aes(fill=sex))+
+  theme_classic()+
+  geom_segment(aes(x=1, xend=2, y=14.23222, yend=13.00187), linetype="dashed")+
+  stat_summary(fun.y=mean, geom="crossbar", width=0.2)
+
+#linear regression model
+
+butterfly_ls3 <- lm(forewing_length ~ sex, 
+                    data=butterfly_long)
+
+check_model(butterfly_ls3, check = "normality")
+check_model(butterfly_ls3, check = "linearity")
+check_model(butterfly_ls3, check = "homogeneity")
+check_model(butterfly_ls3, check = "outliers")
+check_model(butterfly_ls3, check = "vif") 
+check_model(butterfly_ls3, check = "qq")
+
+MASS::boxcox(butterfly_ls3)
+
+#the assumption of homogeneity of variance may be violated
+#this may produce:
+#incorrect p values
+#biased parameter estimates
+#incorrect standard errors
+#insufficient tests
+
+summary(butterfly_ls3)
+
+#F=61.3, DF=1,28, p value=1.579e-08
+#p value is less than 0.05 therefore statistically significant
