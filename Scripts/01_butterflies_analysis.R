@@ -95,7 +95,7 @@ butterfly_long %>%
 
 # OUTPUT FIGURE TO FILE ----
 
-ggsave("Figures/butterfly_plot_01.png", height = 8,
+ggsave("Figures and tables/butterfly_plot_01.png", height = 8,
        width = 10, dpi=300)
 
 #colour blindness checker

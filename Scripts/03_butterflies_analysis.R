@@ -100,7 +100,7 @@ butterfly_year %>%
 
 # OUTPUT FIGURE TO FILE ----
 
-ggsave("Figures/butterfly_plot_03.png", height = 8,
+ggsave("Figures and tables/butterfly_plot_03.png", height = 8,
        width = 10, dpi=300)
 
 #colour blindness checker
@@ -113,15 +113,6 @@ colorBlindness::cvdPlot()
 # HYPOTHESIS
 #The average temperature in June is increasing over time
 
-#linear regression
-butterfly_ls6 <- lm(jun_mean ~ year, 
-                    data=butterfly_year)
-
-summary(butterfly_ls6)
-
-#(F=1.687, DF=1,41, p value=0.201)
-#p value is greater than 0.05 therefore not statistically significant
-
 butterfly_ls7 <- lm(jun_mean ~ year 
                     + rain_jun
                     + year:rain_jun,
@@ -133,15 +124,16 @@ check_model(butterfly_ls7, check = "outliers")
 check_model(butterfly_ls7, check = "vif") 
 check_model(butterfly_ls7, check = "qq") 
 
-MASS::boxcox(butterfly_ls7)
+MASS::boxcox(butterfly_ls7) #log transformation not possible
 
-butterfly_ls8 <- log(lm(jun_mean ~ year 
-                    + rain_jun
-                    + year:rain_jun,
-                    data=butterfly_year))
+#high collinearity
+#homogeneity of variance and linearity possibly violated
 
-check_model(butterfly_ls8, check = "linearity")
-check_model(butterfly_ls8, check = "homogeneity")
-check_model(butterfly_ls8, check = "outliers")
-check_model(butterfly_ls8, check = "vif") 
-check_model(butterfly_ls8, check = "qq") 
+#linear regression
+butterfly_ls6 <- lm(jun_mean ~ year, 
+                    data=butterfly_year)
+
+summary(butterfly_ls6)
+
+#(F=1.687, DF=1,41, p value=0.201)
+#p value is greater than 0.05 therefore not statistically significant

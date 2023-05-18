@@ -110,7 +110,7 @@ butterfly_long %>%
 
 # OUTPUT FIGURE TO FILE ----
 
-ggsave("Figures/butterfly_plot_02.png", height = 8,
+ggsave("Figures and tables/butterfly_plot_02.png", height = 8,
        width = 10, dpi=300)
 
 #colour blindness checker
@@ -137,12 +137,6 @@ butterfly_summary %>%
              y=mean))+
   geom_pointrange(aes(ymin=mean-sd, ymax=mean+sd)) +
   theme_bw()
-
-# make table
-
-butterfly_summary %>% 
-  kbl(caption="Summary statistics of forewing sizes of butterflies in male and female Silver Spotter Skippers") %>% 
-  kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
 
 # calculate the average difference and sd in forewing length between sexes
 
