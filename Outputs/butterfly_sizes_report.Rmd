@@ -1,5 +1,5 @@
 ---
-title: "Exploring the universal ecological responses to climate change in Hespbutterflies"
+title: "Climate change: Exploring the differences in sex and changes in body size in Hesperia comma"
 author: "Hannah Wintle (100309582)"
 date: "2023-05-09"
 output: pdf_document
@@ -37,7 +37,7 @@ To explore the relationship between forewing length and various factors, I condu
 
 ## Results and Discussion
 
-### Male and female sizes
+### Male vs female sizes
 
 I hypothesised that there would be a difference in the sizes of male and female butterfly specimens because of potential sexual dimorphism, where males and females of the same species often exhibit distinct physical characteristics. Female *Hesperia comma* butterflies were an average of 1.23 mm larger than their male counterparts in forewing length [95% CI;1.008, 1,452] with statistical significance (Linear Model: F~1,28~ = 61.3, P \< 0.001, Figure 1).
 
