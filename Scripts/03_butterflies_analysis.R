@@ -133,7 +133,7 @@ check_model(butterfly_ls7, check = "outliers")
 check_model(butterfly_ls7, check = "vif") 
 check_model(butterfly_ls7, check = "qq") 
 
-MASS::boxcox(butterfly_ls5)
+MASS::boxcox(butterfly_ls7)
 
 butterfly_ls8 <- log(lm(jun_mean ~ year 
                     + rain_jun

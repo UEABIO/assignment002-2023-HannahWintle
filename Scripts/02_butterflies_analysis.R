@@ -184,7 +184,7 @@ butterfly_long %>% #linear model
 
 #linear regression model
 
-butterfly_ls3 <- lm(forewing_length ~ sex, 
+butterfly_ls5 <- lm(forewing_length ~ sex, 
                     data=butterfly_long)
 
 check_model(butterfly_ls3, check = "normality")
@@ -194,7 +194,7 @@ check_model(butterfly_ls3, check = "outliers")
 check_model(butterfly_ls3, check = "vif") 
 check_model(butterfly_ls3, check = "qq")
 
-MASS::boxcox(butterfly_ls3)
+MASS::boxcox(butterfly_ls5)
 
 #the assumption of homogeneity of variance may be violated
 #this may produce:
@@ -203,7 +203,7 @@ MASS::boxcox(butterfly_ls3)
 #incorrect standard errors
 #insufficient tests
 
-summary(butterfly_ls3)
+summary(butterfly_ls5)
 
 #F=61.3, DF=1,28, p value=1.579e-08
 #p value is less than 0.05 therefore statistically significant
