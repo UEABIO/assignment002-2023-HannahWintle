@@ -59,17 +59,20 @@ butterfly_year %>%
   sum()
 
 # fix rain value
-butterfly_year$rain_jun <- replace(butterfly_year$rain_jun, 14, "57.7")
+butterfly_year$rain_jun <- replace(butterfly_year$rain_jun, 14, 57.7)
 butterfly_year$rain_jun <- as.numeric(butterfly_year$rain_jun)
-
-# convert year into date values
-butterfly_year$year <- as.Date(as.character(butterfly_year$year), format = "%Y")
 
 # check data distributions
 butterfly_year %>%
   ggplot(aes(x=year,
              y=jun_mean))+
-  geom_jitter()+
+  geom_point()+
+  geom_smooth(method="lm")
+
+butterfly_year %>%
+  ggplot(aes(x=year,
+             y=rain_jun))+
+  geom_point()+
   geom_smooth(method="lm")
 
 #__________________________----
@@ -107,23 +110,38 @@ colorBlindness::cvdPlot()
 
 # MODEL----
 
-#HYPOTHESIS
-#The average temperature in june is increasing over time
+# HYPOTHESIS
+#The average temperature in June is increasing over time
 
-butterfly_ls3 <- lm(jun_mean ~ year, data = butterfly_year)
+#linear regression
+butterfly_ls6 <- lm(jun_mean ~ year, 
+                    data=butterfly_year)
 
-check_model(butterfly_ls3, check = "linearity")
-check_model(butterfly_ls3, check = "homogeneity")
-check_model(butterfly_ls3, check = "outliers")
-check_model(butterfly_ls3, check = "vif") 
-check_model(butterfly_ls3, check = "qq") 
+summary(butterfly_ls6)
 
-MASS::boxcox(butterfly_ls3)
+#(F=1.687, DF=1,41, p value=0.201)
+#p value is greater than 0.05 therefore not statistically significant
 
-butterfly_sqrt <- lm(1/sqrt(jun_mean) ~ year, data = butterfly)
+butterfly_ls7 <- lm(jun_mean ~ year 
+                    + rain_jun
+                    + year:rain_jun,
+                    data=butterfly_year)
 
-check_model(butterfly_sqrt, check = "linearity")
-check_model(butterfly_sqrt, check = "homogeneity")
-check_model(butterfly_sqrt, check = "outliers") 
-check_model(butterfly_sqrt, check = "vif") 
-check_model(butterfly_sqrt, check = "qq") 
+check_model(butterfly_ls7, check = "linearity")
+check_model(butterfly_ls7, check = "homogeneity")
+check_model(butterfly_ls7, check = "outliers")
+check_model(butterfly_ls7, check = "vif") 
+check_model(butterfly_ls7, check = "qq") 
+
+MASS::boxcox(butterfly_ls5)
+
+butterfly_ls8 <- log(lm(jun_mean ~ year 
+                    + rain_jun
+                    + year:rain_jun,
+                    data=butterfly_year))
+
+check_model(butterfly_ls8, check = "linearity")
+check_model(butterfly_ls8, check = "homogeneity")
+check_model(butterfly_ls8, check = "outliers")
+check_model(butterfly_ls8, check = "vif") 
+check_model(butterfly_ls8, check = "qq") 
