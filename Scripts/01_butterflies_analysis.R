@@ -13,12 +13,11 @@ library(here)
 library(kableExtra) # make tables
 library(broom.helpers)
 library(GGally)
-library(emmeans)
 library(performance)
 library(patchwork)
-library(car) # variance inflation factor
 library(broom)
 library(knitr)
+library(ggpubr) # regression line to scatter plot
 
 #__________________________----
 
@@ -89,13 +88,15 @@ butterfly_long %>%
   theme_bw()+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(axis.text = element_text(size = 14))+
+  stat_regline_equation(label.y = 15, label.x = 12)+
+  stat_cor(aes(label=..rr.label..), label.y=15.2, label.x = 12)+
   theme(axis.title = element_text(size = 14))
 
 #__________________________----
 
 # OUTPUT FIGURE TO FILE ----
 
-ggsave("Figures and tables/butterfly_plot_01.png", height = 8,
+ggsave("Figures/butterfly_plot_01.png", height = 8,
        width = 10, dpi=300)
 
 #colour blindness checker
@@ -134,12 +135,18 @@ drop1(butterfly_ls1, test = "F") #drop1 can help identify the least significant 
 
 butterfly_ls2 <- lm(forewing_length ~ jun_mean,
                     data=butterfly_long)
-
 summary(butterfly_ls2)
+
 # F=3.027, DF=1,28, p value= 0.093
 # p value greater than 0.05. Not statistically significant
 # multicollinearity may be biasing the regression model
 # not enough data points?
+
+butterfly_ls8 <- lm(forewing_length ~ rain_jun,
+                    data=butterfly_long)
+summary(butterfly_ls8)
+#precipitation has no effect on forewing length
+#F-statistic: 0.4966 on 1 and 28 DF,  p-value: 0.4868
 
 cor_coeff <- cor(butterfly_long$jun_mean, butterfly_long$forewing_length)
 print(cor_coeff)
@@ -188,8 +195,3 @@ combined_table <- bind_rows(
 
 kable(combined_table, caption = "Summary statistics of temperature affecting forewing sizes in male and female Silver Spotter Skippers") %>%
   kable_styling(bootstrap_options = "striped", full_width = TRUE, position = "left")
-
-#OUTPUT TABLE TO FILE----
-
-ggsave("Figures and tables/butterfly_table_01.png", height = 8,
-       width = 10, dpi=300)

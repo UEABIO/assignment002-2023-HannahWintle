@@ -100,7 +100,7 @@ butterfly_year %>%
 
 # OUTPUT FIGURE TO FILE ----
 
-ggsave("Figures and tables/butterfly_plot_03.png", height = 8,
+ggsave("Figures/butterfly_plot_03.png", height = 8,
        width = 10, dpi=300)
 
 #colour blindness checker
