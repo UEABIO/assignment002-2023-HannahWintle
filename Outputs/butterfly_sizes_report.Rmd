@@ -3,6 +3,7 @@ title: "Univoltine Butterflies report (WORK IN PROGRESS)"
 author: "Hannah Wintle"
 date: "2023-05-09"
 output: pdf_document
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -21,9 +22,13 @@ library(colorBlindness)
 library(RColorBrewer)
 library(knitr)
 library(kableExtra)
+library(citr)
+library(rmarkdown)
 ```
 
 ## Introduction
+
+In recent decades, ecologists have widely discussed and documented the impact of climate change across a wide range of species and habitats. One of the most visible effects of rising temperatures is the shifting distribution of species and changes in their abundance @pacifici2015. As global temperatures continue to rise, many species are responding by moving to cooler habitats or altering their behaviour and life cycles [@miller-rushing2008; @diamond2011]. Alongside these trends the impact of temperature on body sizes have not been thoroughly examined. Invertebrates are of particular interest in this regard, as they make up the vast majority of biodiversity, are found in all types of habitats and are ectothermic @bickford2011. This makes them highly susceptible to temperature changes @ohlberger2013. Horne, Hirst and Atkinson (2015) found that species that produce multiple generations per year (multivoltine species) tend to decrease in body size as temperatures rise, particularly at lower latitudes. In contrast, species that produce a single generation per year (univoltine species) exhibit the opposite trend. These patterns are believed to reflect evolutionary adaptations to variation in season length, whereby univoltine species capitalise on a longer growing season by growing larger, while multivoltine species may mature earlier at smaller sizes to maximise the number of generations per year @horne2015. Such adaptations are critical for optimising reproductive success in different environments. This report focuses on the potential impact of climate change on the size of the univoltine Silver-spotted Skipper (*Hesperia comma*) butterflies. These butterflies are found throughout the Northern Hemisphere, and their populations have already shown sensitivity to changes in temperature [@davies2006; @fenberg2016]. Thus, we hypothesise that (i) the years with warmer temperatures will lead to larger adult butterflies and (ii) there will be a difference between males and females butterflies.
 
 ## Analysis
 
@@ -52,6 +57,7 @@ knitr::include_graphics(here("Figures and tables", "butterfly_plot_01.png"))
 ```
 
 ### The effect of rainfall on forewing length
+
 I found no evidence for an interaction effect of rainfall on forewing length (F=...)
 
 ### Climate change
