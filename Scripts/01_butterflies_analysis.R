@@ -16,6 +16,9 @@ library(GGally)
 library(emmeans)
 library(performance)
 library(patchwork)
+library(car) # variance inflation factor
+library(broom)
+library(knitr)
 
 #__________________________----
 
@@ -103,14 +106,13 @@ colorBlindness::cvdPlot()
 #HYPOTHESES
 # The average temperature in june will affect forewing length
 # The amount of rainfall affects forewing length
-# Changes in temperature will affect male forewing length more than female forewing length by changes in temperature
 
 #MODEL----
 
-butterfly_ls1 <- lm(forewing_length ~ sex + jun_mean + rain_jun +
-                      sex:jun_mean +
-                      sex:rain_jun +
-                      jun_mean:rain_jun, 
+butterfly_ls1 <- lm(forewing_length ~ jun_mean + sex + rain_jun +
+                      jun_mean:sex +
+                      jun_mean:rain_jun +
+                      sex:rain_jun, 
                     data=butterfly_long)
 
 check_model(butterfly_ls1, check = "normality")
@@ -121,42 +123,73 @@ check_model(butterfly_ls1, check = "vif")
 check_model(butterfly_ls1, check = "qq")
 
 # there is high collinearity
-# remove one of the variables 
 
-#drop1 can help identify the least significant predictor variable
+drop1(butterfly_ls1, test = "F") #drop1 can help identify the least significant predictor variable
 
-drop1(butterfly_ls1, test = "F")
 # all three interaction terms appeared under the drop1 function
-# therefore they are not statistically significant
+# all interaction term p values were over 0.05 therefore not statistically significant
 # sex:jun_mean (F=0.55, DF=1,23, p value=0.47)
-# sex:rain_jun (F=0.12, DF=1,23, p value=0.66)
+# sex:rain_jun (F=0.20, DF=1,23, p value=0.66)
 # jun_mean:rain_jun (F=0.17, DF=1,23, p value=0.69)
-# found no evidence that temperature affects rain or that rain affects forewing length between sexes
 
-butterfly_ls2 <- lm(forewing_length ~ sex + 
-                      jun_mean +
-                      jun_mean:sex,
+butterfly_ls2 <- lm(forewing_length ~ jun_mean,
                     data=butterfly_long)
 
-check_model(butterfly_ls2, check = "vif")
-
-# produced better results even though there is still high multicollinearity
-# a large F value indicates that the variability between groups is larger compared with the variability within groups
-# large standard error comparing temperature and sex
-# untrustworthy coefficients/not representative
+summary(butterfly_ls2)
+# F=3.027, DF=1,28, p value= 0.093
+# p value greater than 0.05. Not statistically significant
 # multicollinearity may be biasing the regression model
-# not enough data points
+# not enough data points?
 
-broom::tidy(butterfly_ls2)
+cor_coeff <- cor(butterfly_long$jun_mean, butterfly_long$forewing_length)
+print(cor_coeff)
+# correlation coefficient = 0.312
+# suggests a low-to-moderate positive correlation between temp and forewing length
 
-butterfly_long %>% #linear model
-  ggplot(aes(x=sex, 
-             y=forewing_length))+
-  geom_jitter(aes(fill=sex))+
-  theme_classic()+
-  geom_segment(aes(x=1, xend=2, y=14.23222, yend=13.00187), linetype="dashed")+
-  stat_summary(fun.y=mean, geom="crossbar", width=0.2)
+# HYPOTHESIS
+# Changes in temperature will affect male forewing length more than female forewing length
 
-emmeans::emmeans(butterfly_ls2, specs = c("sex")) %>%
-  kbl(caption="Summary statistics of forewing sizes of butterflies in male and female Silver Spotter Skippers") %>% 
-  kable_styling(bootstrap_options = "striped", full_width = T, position = "left")
+butterfly_ls3 <- lm(Males ~ jun_mean,
+                    data=butterfly_wide)
+summary(butterfly_ls3)
+#F-statistic: 11.53 on 1 and 13 DF,  p-value: 0.004778
+
+butterfly_ls4 <- lm(Females ~ jun_mean,
+                    data=butterfly_wide)
+summary(butterfly_ls4)
+#F-statistic: 2.905 on 1 and 13 DF,  p-value: 0.1121
+# Male value is far more statistically significant
+# However high collinearity persists
+
+#___________________________----
+#TABLE----
+
+# Extract the model summaries using broom
+summary_ls2 <- tidy(butterfly_ls2)
+summary_ls3 <- tidy(butterfly_ls3)
+summary_ls4 <- tidy(butterfly_ls4)
+
+# Remove intercept term from each summary table
+summary_ls2 <- summary_ls2 %>% filter(term != "(Intercept)")
+summary_ls3 <- summary_ls3 %>% filter(term != "(Intercept)")
+summary_ls4 <- summary_ls4 %>% filter(term != "(Intercept)")
+
+# Replace jun_mean term with custom labels in each summary table
+summary_ls2$term <- "Combined"
+summary_ls3$term <- "Males"
+summary_ls4$term <- "Females"
+
+# Combine the modified tables
+combined_table <- bind_rows(
+  `Forewing Length` = summary_ls2,
+  `Males` = summary_ls3,
+  `Females` = summary_ls4
+)
+
+kable(combined_table, caption = "Summary statistics of temperature affecting forewing sizes in male and female Silver Spotter Skippers") %>%
+  kable_styling(bootstrap_options = "striped", full_width = TRUE, position = "left")
+
+#OUTPUT TABLE TO FILE----
+
+ggsave("Figures and tables/butterfly_table_01.png", height = 8,
+       width = 10, dpi=300)
